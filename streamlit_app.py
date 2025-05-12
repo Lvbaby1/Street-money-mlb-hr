@@ -7,7 +7,7 @@ st.title("Streetmoney MLB HR Predictor")
 st.subheader("Top Home Run Picks for Today")
 
 # Load your batter data CSV from GitHub
-df = pd.read_csv('your_batter_data.csv')  # Replace with your actual file name
+df = pd.read_csv('homeruns.csv')  # Replace with your actual file name
 
 # Show the data in a table
 st.dataframe(df)
