@@ -13,25 +13,30 @@ df_hr = pd.read_csv("homeruns.csv")
 df_ev = pd.read_csv("exit_velocity 2.csv")
 
 # Show column names for debugging (optional)
-# st.write(df_hr.columns)
-# st.write(df_ev.columns)
+st.write("Columns in homeruns.csv:")
+st.write(df_hr.columns)
+
+st.write("Columns in exit_velocity 2.csv:")
+st.write(df_ev.columns)
+
+# Create full player name in exit velocity file (combining last_name and first_name)
+df_ev["Player"] = df_ev["last_name"] + ", " + df_ev["first_name"]
 
 # Clean and rename columns for clarity
 df_hr = df_hr.rename(columns={
-    "player_name": "Player", 
+    "player_name": "Player",  # Ensure 'Player' matches
     "team_abbrev": "Team", 
     "XHR": "Expected HR"  # Rename 'XHR' to 'Expected HR'
 })
 
 df_ev = df_ev.rename(columns={
-    "player_name": "Player",
     "exit_velocity": "Exit Velo",
     "launch_angle": "Launch Angle",
     "barrel_batted_rate": "Barrel %",
     "estimated_woba_using_speedangle": "xwOBA"
 })
 
-# Merge the two dataframes on the "Player" column (adjust if the identifier is different)
+# Merge the two dataframes on the "Player" column
 merged_df = pd.merge(df_hr, df_ev, on="Player", how="inner")
 
 # Optional: Filter out players with low Expected HR (you can adjust this threshold)
