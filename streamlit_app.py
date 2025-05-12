@@ -21,9 +21,9 @@ selected_team = st.selectbox('Select Team', sorted(teams))
 # Optional: Player name search
 player_search = st.text_input("Search for Player (optional)").strip().lower()
 
-# Optional: Opponent filter (if opponent column exists)
-if 'opponent' in df.columns:
-    opponents = df['opponent'].unique()
+# Opponent filter (using 'team_abbrev' column for both teams)
+if 'team_abbrev' in df.columns:
+    opponents = df[df['team_abbrev'] != selected_team]['team_abbrev'].unique()
     selected_opp = st.selectbox('Filter by Opponent (optional)', ['All'] + sorted(opponents))
 else:
     selected_opp = 'All'
@@ -35,7 +35,7 @@ if player_search:
     filtered_df = filtered_df[filtered_df['player'].str.lower().str.contains(player_search)]
 
 if selected_opp != 'All':
-    filtered_df = filtered_df[filtered_df['opponent'] == selected_opp]
+    filtered_df = filtered_df[filtered_df['team_abbrev'] == selected_opp]
 
 # Format HR probability as percentage
 if 'hr_probability' in filtered_df.columns:
@@ -48,3 +48,4 @@ if 'hr_probability' in filtered_df.columns:
 # Show filtered predictions
 st.subheader(f"Top Home Run Predictions for {selected_team}")
 st.dataframe(filtered_df)
+    
