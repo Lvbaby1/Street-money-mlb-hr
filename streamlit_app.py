@@ -3,10 +3,9 @@ import streamlit as st
 st.set_page_config(page_title="Streetmoney MLB HR Predictor", layout="wide")
 
 st.title("Streetmoney MLB HR Predictor")
-st.write("Welcome! This app will display daily home run predictions using Statcast and sharp bettor insights.")
+st.markdown("**App is under development. This is a placeholder to keep deployment stable.**")
 
-# Example placeholder
-st.header("Coming Soon:")
-st.write("- Home run model predictions")
-st.write("- Sharp consensus picks")
-st.write("- Daily Statcast-based filters")
+st.success("If you're seeing this, your app is working!")
+
+# Keep the app alive
+st.empty()
