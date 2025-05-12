@@ -12,16 +12,6 @@ df_hr = pd.read_csv("homeruns.csv")
 # Load the second CSV file (exit_velocity 2.csv - contains exit velocity data)
 df_ev = pd.read_csv("exit_velocity 2.csv")
 
-# Show column names for debugging (optional)
-st.write("Columns in homeruns.csv:")
-st.write(df_hr.columns)
-
-st.write("Columns in exit_velocity 2.csv:")
-st.write(df_ev.columns)
-
-# Create full player name in exit velocity file (combining last_name and first_name)
-df_ev["Player"] = df_ev["last_name"] + ", " + df_ev["first_name"]
-
 # Clean and rename columns for clarity (using exact names as typed)
 df_hr = df_hr.rename(columns={
     "player_name": "Player",  # Ensure 'Player' matches
@@ -36,7 +26,7 @@ df_ev = df_ev.rename(columns={
     "estimated_woba_using_speedangle": "xwOBA"  # Rename xwOBA column
 })
 
-# Merge the two dataframes on the "Player" column
+# Merge the two dataframes based on Player name (directly)
 merged_df = pd.merge(df_hr, df_ev, on="Player", how="inner")
 
 # Optional: Filter out players with low Expected HR (you can adjust this threshold)
