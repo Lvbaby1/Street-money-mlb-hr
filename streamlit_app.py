@@ -1,51 +1,37 @@
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 
-# Page setup
+# Sample data (home run predictions)
+data = {
+    "Player": ["Aaron Judge", "Kyle Schwarber", "Shohei Ohtani", "Matt Olson", "Pete Alonso"],
+    "Team": ["Yankees", "Phillies", "Dodgers", "Braves", "Mets"],
+    "Opponent": ["Red Sox", "Marlins", "Giants", "Cubs", "Nationals"],
+    "HR Probability": [0.42, 0.38, 0.35, 0.34, 0.33]
+}
+
+# Create a DataFrame
+df = pd.DataFrame(data)
+
+# Set up Streamlit page configuration
 st.set_page_config(page_title="Streetmoney MLB HR Predictor", layout="wide")
 st.title("Streetmoney MLB HR Predictor")
 st.subheader("Top Home Run Picks for Today")
 
-# Load your home run data
-df = pd.read_csv('homeruns.csv')
+# Display the predictions as a table
+st.write("### Home Run Predictions")
+st.dataframe(df.style.format({"HR Probability": "{:.0%}"}))
 
-# Show column names and data preview
-st.write("Column names:", df.columns)
-st.write("Preview of data:")
-st.write(df.head())
+# Bar chart for HR probabilities
+st.write("### HR Probability Visualization")
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.bar(df["Player"], df["HR Probability"], color='skyblue')
+ax.set_xlabel('Player')
+ax.set_ylabel('HR Probability')
+ax.set_title('Home Run Probabilities')
+plt.xticks(rotation=45)
+st.pyplot(fig)
 
-# Dropdown to select team
-teams = df['team_abbrev'].unique()
-selected_team = st.selectbox('Select Team', sorted(teams))
-
-# Optional: Player name search
-player_search = st.text_input("Search for Player (optional)").strip().lower()
-
-# Opponent filter (using 'team_abbrev' column for both teams)
-if 'team_abbrev' in df.columns:
-    opponents = df[df['team_abbrev'] != selected_team]['team_abbrev'].unique()
-    selected_opp = st.selectbox('Filter by Opponent (optional)', ['All'] + sorted(opponents))
-else:
-    selected_opp = 'All'
-
-# Apply filters
-filtered_df = df[df['team_abbrev'] == selected_team].copy()
-
-if player_search:
-    filtered_df = filtered_df[filtered_df['player'].str.lower().str.contains(player_search)]
-
-if selected_opp != 'All':
-    filtered_df = filtered_df[filtered_df['team_abbrev'] == selected_opp]
-
-# Format HR probability as percentage
-if 'hr_probability' in filtered_df.columns:
-    filtered_df['hr_probability'] = filtered_df['hr_probability'].apply(lambda x: f"{x:.0%}")
-
-# Sort and show top 5 HR picks
-if 'hr_probability' in filtered_df.columns:
-    filtered_df = filtered_df.sort_values(by='hr_probability', ascending=False).head(5)
-
-# Show filtered predictions
-st.subheader(f"Top Home Run Predictions for {selected_team}")
-st.dataframe(filtered_df)
-    
+# Add a button for user interaction (optional)
+if st.button('Refresh Predictions'):
+    st.write("Predictions have been refreshed!")
