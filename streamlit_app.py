@@ -1,49 +1,31 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
-# Load your homeruns.csv file
-df = pd.read_csv("homeruns.csv")
+st.set_page_config(page_title="Streetmoney Game Winner Predictor", layout="wide")
+st.title("MLB Game Winner Predictor")
+st.subheader("Simple model using ERA and batting average")
 
-# Clean up player names and filter missing values
-df["player"] = df["player"].str.strip()
-df = df[df["xhr"].notnull()]
-df = df.sort_values(by="xhr", ascending=False)
+# Sample data for today’s games
+data = {
+    "Team_1": ["Yankees", "Dodgers", "Braves"],
+    "Team_2": ["Red Sox", "Giants", "Cubs"],
+    "Team_1_SP_ERA": [3.45, 2.95, 4.10],
+    "Team_2_SP_ERA": [4.22, 3.80, 4.55],
+    "Team_1_Bullpen_ERA": [3.98, 3.50, 4.20],
+    "Team_2_Bullpen_ERA": [4.12, 3.90, 4.60],
+    "Team_1_BA": [0.251, 0.267, 0.245],
+    "Team_2_BA": [0.243, 0.258, 0.238]
+}
 
-# Prediction logic based on expected home runs (xhr)
-def predict_hr(xhr):
-    if xhr > 0.4:
-        return "High"
-    elif xhr > 0.3:
-        return "Medium"
-    else:
-        return "Low"
+df = pd.DataFrame(data)
 
-df["HR Prediction"] = df["xhr"].apply(predict_hr)
+# Prediction logic
+def predict_winner(row):
+    team_1_score = (1 / row['Team_1_SP_ERA']) + (1 / row['Team_1_Bullpen_ERA']) + row['Team_1_BA']
+    team_2_score = (1 / row['Team_2_SP_ERA']) + (1 / row['Team_2_Bullpen_ERA']) + row['Team_2_BA']
+    return row['Team_1'] if team_1_score > team_2_score else row['Team_2']
 
-# Streamlit page setup
-st.set_page_config(page_title="Streetmoney MLB HR Predictor", layout="wide")
-st.title("Streetmoney MLB HR Predictor")
-st.subheader("Top Home Run Picks Based on Expected HRs (xHR)")
+df["Predicted_Winner"] = df.apply(predict_winner, axis=1)
 
-# Optional: team filter
-teams = df["team_abbrev"].dropna().unique()
-selected_teams = st.multiselect("Filter by Team", sorted(teams))
-if selected_teams:
-    df = df[df["team_abbrev"].isin(selected_teams)]
-
-# Show filtered and sorted dataframe with prediction
-st.dataframe(
-    df[["player", "team_abbrev", "xhr", "HR Prediction"]]
-    .reset_index(drop=True)
-    .rename(columns={"player": "Player", "team_abbrev": "Team", "xhr": "Expected HRs", "HR Prediction": "Prediction"})
-)
-
-# Optional: Show top 5 hitters with highest xHR
-st.subheader("Top 5 Predicted HR Hitters")
-st.dataframe(
-    df[["player", "team_abbrev", "xhr", "HR Prediction"]]
-    .sort_values(by="xhr", ascending=False)
-    .head(5)
-    .reset_index(drop=True)
-    .rename(columns={"player": "Player", "team_abbrev": "Team", "xhr": "Expected HRs", "HR Prediction": "Prediction"})
-)
+# Show the table
+st.dataframe(df)
