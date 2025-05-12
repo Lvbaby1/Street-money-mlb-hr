@@ -22,7 +22,7 @@ st.write(df_ev.columns)
 # Create full player name in exit velocity file (combining last_name and first_name)
 df_ev["Player"] = df_ev["last_name"] + ", " + df_ev["first_name"]
 
-# Clean and rename columns for clarity
+# Clean and rename columns for clarity (using exact names as typed)
 df_hr = df_hr.rename(columns={
     "player_name": "Player",  # Ensure 'Player' matches
     "team_abbrev": "Team", 
@@ -30,10 +30,10 @@ df_hr = df_hr.rename(columns={
 })
 
 df_ev = df_ev.rename(columns={
-    "exit_velocity": "Exit Velo",
-    "launch_angle": "Launch Angle",
-    "barrel_batted_rate": "Barrel %",
-    "estimated_woba_using_speedangle": "xwOBA"
+    "max_hit_speed": "Exit Velo",        # Update 'max_hit_speed' to 'Exit Velo'
+    "avg_hit_angle": "Launch Angle",     # Update 'avg_hit_angle' to 'Launch Angle'
+    "barrel_batted_rate": "Barrel %",    # Keeping 'Barrel %' for barrel batted rate
+    "estimated_woba_using_speedangle": "xwOBA"  # Rename xwOBA column
 })
 
 # Merge the two dataframes on the "Player" column
