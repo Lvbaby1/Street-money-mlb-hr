@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
 
 # Sample data (home run predictions)
 data = {
@@ -21,16 +20,6 @@ st.subheader("Top Home Run Picks for Today")
 # Display the predictions as a table
 st.write("### Home Run Predictions")
 st.dataframe(df.style.format({"HR Probability": "{:.0%}"}))
-
-# Bar chart for HR probabilities
-st.write("### HR Probability Visualization")
-fig, ax = plt.subplots(figsize=(8, 4))
-ax.bar(df["Player"], df["HR Probability"], color='skyblue')
-ax.set_xlabel('Player')
-ax.set_ylabel('HR Probability')
-ax.set_title('Home Run Probabilities')
-plt.xticks(rotation=45)
-st.pyplot(fig)
 
 # Add a button for user interaction (optional)
 if st.button('Refresh Predictions'):
