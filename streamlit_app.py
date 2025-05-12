@@ -7,7 +7,14 @@ st.title("Streetmoney MLB HR Predictor")
 st.subheader("Top Home Run Picks for Today")
 
 # Load the batter data CSV from GitHub
-df = pd.read_csv('homeruns.csv')  # Use the file name you provided
+df = pd.read_csv('homeruns.csv')  # Correct file name
 
-# Display the data in a table
-st.dataframe(df)
+# Filter by team (if 'Team' is a column in the data)
+teams = df['Team'].unique()
+selected_team = st.selectbox('Select Team', teams)
+
+# Filter the dataframe based on the selected team
+filtered_df = df[df['Team'] == selected_team]
+
+# Display the filtered data in a table
+st.dataframe(filtered_df)
