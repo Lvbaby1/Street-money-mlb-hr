@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# Set up the app
 st.set_page_config(page_title="Streetmoney MLB HR Predictor", layout="wide")
 st.title("Streetmoney MLB HR Predictor")
 st.subheader("Top Home Run Picks for Today")
