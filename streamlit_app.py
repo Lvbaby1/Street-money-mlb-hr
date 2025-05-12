@@ -1,31 +1,20 @@
 import streamlit as st
 import pandas as pd
 
-# Load the CSV
-df = pd.read_csv("exit_velocity 2.csv")
+# Load the HR data
+df = pd.read_csv("homeruns.csv")
 
-# Strip whitespace from name column
-df["last_name, first_name"] = df["last_name, first_name"].str.strip()
+# Strip extra spaces and clean names
+df["player"] = df["player"].str.strip()
 
-# Filter for meaningful Exit Velocity data
-df = df[df["max_hit_speed"].notnull()]
-df = df[df["max_hit_speed"] >= 90]
+# Sort by expected home runs (xHR)
+df = df[df["xhr"].notnull()]
+df = df.sort_values(by="xhr", ascending=False)
 
-# Set up Streamlit page
-st.set_page_config(page_title="Streetmoney Exit Velo Leaders", layout="wide")
-st.title("Streetmoney MLB Exit Velocity Leaders")
-st.subheader("Statcast Power Metrics (From exit_velocity 2.csv)")
+# Streamlit layout
+st.set_page_config(page_title="Streetmoney HR Picks", layout="wide")
+st.title("Streetmoney MLB HR Predictor")
+st.subheader("Top Power Hitters Based on xHR")
 
-# Display filtered table
-st.dataframe(
-    df[["last_name, first_name", "max_hit_speed", "avg_hit_angle", "barrel_batted_rate", "estimated_woba_using_speedangle"]]
-    .rename(columns={
-        "last_name, first_name": "Player",
-        "max_hit_speed": "Exit Velocity",
-        "avg_hit_angle": "Launch Angle",
-        "barrel_batted_rate": "Barrel %",
-        "estimated_woba_using_speedangle": "xwOBA"
-    })
-    .sort_values(by="Exit Velocity", ascending=False)
-    .reset_index(drop=True)
-)
+# Show data
+st.dataframe(df[["player", "team_abbrev", "xhr", "pa", "avg_launch_speed", "avg_launch_angle", "brl_pa"]].reset_index(drop=True))
