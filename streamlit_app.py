@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
 
-# Load the batter data CSV from GitHub
-df = pd.read_csv('homeruns.csv')  # Correct file name
+# Load the batter data CSV
+df = pd.read_csv('homeruns.csv')
 
 # Display the column names to check for the correct one
-st.write(df.columns)  # This shows the column names
+st.write(df.columns)
